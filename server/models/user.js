@@ -2,7 +2,7 @@ const dbUtils = require('./../utils/db-utils');
 const user = {
 
     async getOneByUserNameAndPassword( options ) {
-        let _sql = `SELECT * from admin where password="${options.password}" and account_name="${options.accountName}" limit 1`;
+        let _sql = `SELECT * from admin where password="${options.password}" and username="${options.username}" limit 1`;
         let result = await dbUtils.query( _sql );
         if ( Array.isArray(result) && result.length > 0 ) {
             result = result[0]

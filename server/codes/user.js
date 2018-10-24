@@ -1,6 +1,9 @@
 const userCode = {
+    ERROR_SQL: 'SQL语句错误',
 
     ERROR_USER_NAME: '用户名格式为6-16位的小写字母，包括-、_',
+
+    ERROR_PERMISSION: '该用户权限不能够新建管理员',
 
     ERROR_EMAIL: '请输入正确的邮箱地址',
 

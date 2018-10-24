@@ -13,7 +13,7 @@ const user = {
     async signIn( formData ) {
         let resultData = await userModel.getOneByUserNameAndPassword({
             password: formData.password,
-            accountName: formData.username});
+            username: formData.username});
         return resultData
     },
     async permission(userId) {
@@ -29,7 +29,7 @@ const user = {
     async getToken(userResult, userPermission, type, service) {
         let token = jwt.sign({
             username: userResult.username,
-            userId: userResult.user_id,
+            userId: userResult.id,
             type: type,
             service: service,
             shopId: userResult.shop_id,

@@ -1,42 +1,43 @@
 /**
- *  用户业务操作
+ *  管理员业务操作
  * */
 
-// const validator = require('validator');
-const userModel = require('../models/admin');
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
-const path = require('path');
-const publicKey = fs.readFileSync(path.join(__dirname, '../../publicKey.pub'));
-
-const user = {
-    async signIn( formData ) {
-        let resultData = await userModel.getOneByUserNameAndPassword({
-            password: formData.password,
-            accountName: formData.username});
-        return resultData
+const adminModel = require('../models/admin');
+const userModel = require('../models/user');
+const admin = {
+    async getAdmin(payload) {
+        let result = await adminModel.getAdminListByShopId(payload.shopId);
+        return result
     },
-    async permission(userId) {
-        let resultData = await userModel.getPermissionByUserId(userId);
-        return resultData;
+    async getAdminName(payload) {
+        let result = await adminModel.getAdminByUsername(payload);
+        if (Array.isArray(result) && result.length !== 0) {
+            return true
+        }
+        return false
     },
-    async token(userResult, userPermission) {
-
-        let [foo, bar] = await Promise.all([this.getToken(userResult, userPermission, 'token', 'wallet-shell'),
-           this.getToken(userResult, userPermission, 'refresh', 'wallet-shell')]);
-        return [foo, bar]
+    async postAdmin(payload) {
+        let result = await adminModel.generateAdmin(payload);
+        return result
     },
-    async getToken(userResult, userPermission, type, service) {
-        let token = jwt.sign({
-            username: userResult.username,
-            userId: userResult.user_id,
-            type: type,
-            service: service,
-            shopId: userResult.shop_id,
-            adminType: userResult.admin_type,
-            permissionList: userPermission,
-        }, publicKey, { expiresIn: '168h' });
-        return token
+    async getAdminInfo(ctx, formBody) {
+        let result = await userModel.getOneByUserNameAndPassword({username: ctx.decode.username, password: formBody.adminPassword});
+        let _validate = {
+            isMatched: false,
+            adminType: 0,
+            shopId: null
+        };
+        if (!result) {
+            _validate.isMatched = true;
+        } else {
+            if (result.admin_type === 0) {
+                _validate.adminType = 1;
+                _validate.shopId = 0;
+            } else {
+                _validate.adminType = 3;
+            }
+        }
+        return _validate
     }
 }
-module.exports = user;
+module.exports = admin;
