@@ -13,6 +13,9 @@ const admin = {
         let _sql = `SELECT id FROM admin WHERE username="${payload}"`;
         let result = await dbUtils.query( _sql );
         return result;
+    },
+    async putAdminByUserId(payload, id) {
+        let result = await dbUtils.updateData('admin', payload, id);
     }
 };
 module.exports = admin;

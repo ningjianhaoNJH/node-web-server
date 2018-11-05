@@ -1,3 +1,4 @@
+'use strict';
 const path = require('path');
 const Koa = require('koa');
 // const convert = require('koa-convert');

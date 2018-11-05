@@ -38,6 +38,10 @@ const admin = {
             }
         }
         return _validate
-    }
+    },
+    async putAdmin(payload) {
+        let result = await adminModel.generateAdmin(payload);
+        return result
+    },
 }
 module.exports = admin;
